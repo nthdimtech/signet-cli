@@ -25,6 +25,45 @@ void SignetCLIApplication::generateScryptKey(const QString &password, u8 *key, c
 
 }
 
+void SignetCLIApplication::deviceStateToString(int deviceState ,std::string &str)
+{
+	switch (deviceState) {
+	case DISCONNECTED:
+		str = "No connection";
+		break;
+	case UNINITIALIZED:
+		str = "uninitialized";
+		break;
+	case LOGGED_OUT:
+		str = "locked";
+		break;
+	case LOGGED_IN:
+		str = "unlocked";
+		break;
+	case INITIALIZING:
+		str = "initializing";
+		break;
+	case WIPING:
+		str = "wiping";
+		break;
+	case ERASING_PAGES:
+		str = "writing firmware - erasing";
+		break;
+	case FIRMWARE_UPDATE:
+		str = "writing firmware";
+		break;
+	case BACKING_UP_DEVICE:
+		str = "backing up device";
+		break;
+	case RESTORING_DEVICE:
+		str = "restoring device";
+		break;
+	default:
+		str = "<unknown state>";
+		break;
+	}
+}
+
 void SignetCLIApplication::generateKey(const QString &password, u8 *key, const u8 *hashfn, const u8 *salt)
 {
 	QByteArray s = password.toUtf8();

@@ -4,6 +4,7 @@
 #include <QString>
 #include <QList>
 #include <QStringList>
+#include <iostream>
 
 #include "signetcliapplication.h"
 
@@ -18,8 +19,9 @@ extern "C" {
 #include "changepasswordtask.h"
 #include "initializetask.h"
 #include "wipetask.h"
+#include "statustask.h"
 
-#define VERSION_STRING "0.0.1"
+#define VERSION_STRING "0.0.2"
 #define APPLICATION_STRING "signet-cli"
 
 QStringList g_commandList;
@@ -27,14 +29,14 @@ QStringList g_commandList;
 void deviceClosedS(void *user)
 {
 	Q_UNUSED(user);
-	fprintf(stdout, "Device closed\n");
+	std::cout << "Device closed" << std::endl;
 	QCoreApplication::quit();
 }
 
 void connectionErrorS(void *this_)
 {
 	Q_UNUSED(this_);
-	fprintf(stdout, "Connection closed\n");
+	std::cout << "Connection closed" << std::endl;
 	QCoreApplication::quit();
 }
 
@@ -46,29 +48,28 @@ void signetCmdResponse(void *cb_param, void *cmd_user_param, int cmd_token, int 
 
 void unknownCommand(QString command)
 {
-	fprintf(stderr,	"Unknown command %s", command.toLatin1().data());
+	std::cout << "Unknown command: " << command.toLatin1().data() << std::endl;
 }
 
 void noCommandSpecified()
 {
-	fprintf(stderr, "No command specified. Possible commands are: \n");
+	std::cout << "No command specified. Possible commands are: " << std::endl;
 	QList<QString>::iterator iter;
 	for (iter = g_commandList.begin(); iter != g_commandList.end(); iter++) {
-		fprintf(stderr, "\t%s\n", (*iter).toLatin1().data());
+		std::cout << "\t" << (*iter).toLatin1().data() << std::endl;
 	}
-	fprintf(stderr,
-		"\nFor help regarding a specific command run:\n"
-		"\t" APPLICATION_STRING " help <command>\n");
+	std::cout << std::endl
+		  << "For help regarding a specific command run:" << std::endl
+		  << "\t" APPLICATION_STRING " help <command>" << std::endl;
 }
 
 int main(int argc, char *argv[])
 {
 	SignetCLIApplication app(argc, argv);
-	fprintf(stdout, "\n" APPLICATION_STRING " version " VERSION_STRING "\n\n");
+	std::cout << std::endl << (APPLICATION_STRING " version " VERSION_STRING) << std::endl << std::endl;
 
 	if (app.isRunning()) {
-		fprintf(stderr,
-			"A Signet client instance is already running. Close it and try again\n");
+		std::cout <<  "A Signet client instance is already running. Close it and try again" << std::endl;
 		return -1;
 	}
 
@@ -76,6 +77,7 @@ int main(int argc, char *argv[])
 	g_commandList.append("wipe");
 	g_commandList.append("change-password");
 	g_commandList.append("initialize");
+	g_commandList.append("status");
 
 	if (argc < 2) {
 		noCommandSpecified();
@@ -106,10 +108,11 @@ int main(int argc, char *argv[])
 	if (!command.compare("initialize")) {
 		task = new initializeTask();
 	}
+	if (!command.compare("status")) {
+		task = new statusTask();
+	}
 	//TODO:
-	// initialize
 	// backup device
-	// get device status
 	// restore device
 	// interactive mode
 	// login
@@ -133,7 +136,7 @@ int main(int argc, char *argv[])
 	int rc = ::signetdev_open_connection();
 	if (rc != OKAY) {
 		::signetdev_deinitialize_api();
-		fprintf(stdout, "No signet device detected\n");
+		std::cout << "No signet device detected" << std::endl;
 		return -1;
 	}
 

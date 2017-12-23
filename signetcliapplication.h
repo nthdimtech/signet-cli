@@ -21,6 +21,7 @@ public:
 	{
 		return g_singleton;
 	}
+	void deviceStateToString(int deviceState ,std::string &str);
 	static void generateKey(const QString &password, u8 *key, const u8 *hashfn, const u8 *salt);
 	SignetCLIApplication(int &argc, char **argv);
 };
