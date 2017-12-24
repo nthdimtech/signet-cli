@@ -20,12 +20,14 @@ SOURCES += main.cpp \
     qtsingleapplication/src/qtlocalpeer.cpp \
     qtsingleapplication/src/qtlockedfile_unix.cpp \
     qtsingleapplication/src/qtlockedfile_win.cpp \
-    qtsingleapplication/src/qtsinglecoreapplication.cpp
+    qtsingleapplication/src/qtsinglecoreapplication.cpp \
+    wipetask.cpp
 
 HEADERS += \
     firmwareupdatetask.h \
     signettask.h \
     qtsingleapplication/src/qtsinglecoreapplication.h \
     qtsingleapplication/src/qtlockedfile.h \
-    qtsingleapplication/src/qtlocalpeer.h
+    qtsingleapplication/src/qtlocalpeer.h \
+    wipetask.h
 

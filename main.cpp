@@ -15,6 +15,7 @@ extern "C" {
 
 #include "signettask.h"
 #include "firmwareupdatetask.h"
+#include "wipetask.h"
 
 #define VERSION_STRING "1.0.0"
 #define APPLICATION_STRING "signet-cli"
@@ -31,7 +32,7 @@ void deviceClosedS(void *user)
 void connectionErrorS(void *this_)
 {
 	Q_UNUSED(this_);
-	fprintf(stdout, "Programming complete\n");
+	fprintf(stdout, "Connection closed\n");
 	QCoreApplication::quit();
 }
 
@@ -43,24 +44,19 @@ void signetCmdResponse(void *cb_param, void *cmd_user_param, int cmd_token, int 
 
 void unknownCommand(QString command)
 {
-	fprintf(stderr,
-		APPLICATION_STRING " version " VERSION_STRING "\n"
-		"\n"
-		"Unknown command %s",
-		command.toLatin1().data());
+	fprintf(stderr,	"Unknown command %s", command.toLatin1().data());
 }
 
 void noCommandSpecified()
 {
-	fprintf(stderr,
-		"\n" APPLICATION_STRING " version " VERSION_STRING "\n"
-		"\n"
-		"No command specified. Possible commands are: \n");
+	fprintf(stderr, "No command specified. Possible commands are: \n");
 	QList<QString>::iterator iter;
-	fprintf(stderr, "\thelp\n");
 	for (iter = g_commandList.begin(); iter != g_commandList.end(); iter++) {
 		fprintf(stderr, "\t%s\n", (*iter).toLatin1().data());
 	}
+	fprintf(stderr,
+		"\nFor help regarding a specific command run:\n"
+		"\t" APPLICATION_STRING " help <command>\n");
 }
 
 int main(int argc, char *argv[])
@@ -68,15 +64,16 @@ int main(int argc, char *argv[])
 	QtSingleCoreApplication *app = new QtSingleCoreApplication(
 				"qtsingle-app-signetdev-" + QString(USB_VENDOR_ID) + "-" + QString(USB_SIGNET_DESKTOP_PRODUCT_ID),
 				argc, argv);
+	fprintf(stdout, "\n" APPLICATION_STRING " version " VERSION_STRING "\n\n");
+
 	if (app->isRunning()) {
 		fprintf(stderr,
-			"\n" APPLICATION_STRING " version " VERSION_STRING "\n"
-			"\n"
 			"A Signet client instance is already running. Close it and try again\n");
 		return -1;
 	}
 
 	g_commandList.append("update-firmware");
+	g_commandList.append("wipe");
 
 	if (argc < 2) {
 		noCommandSpecified();
@@ -98,12 +95,15 @@ int main(int argc, char *argv[])
 	if (!command.compare("update-firmware")) {
 		task = new firmwareUpdateTask(argc, argv);
 	}
+	if (!command.compare("wipe")) {
+		task = new wipeTask();
+	}
 	//TODO:
-	// initialize
-	// get device status
-	// change password
 	// wipe
+	// initialize
+	// change password
 	// backup device
+	// get device status
 	// restore device
 	// interactive mode
 	// login
