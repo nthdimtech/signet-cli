@@ -22,6 +22,7 @@ extern "C" {
 #include "statustask.h"
 #include "unlocktask.h"
 #include "locktask.h"
+#include "backuptask.h"
 
 #define VERSION_STRING "0.0.3"
 #define APPLICATION_STRING "signet-cli"
@@ -82,7 +83,7 @@ int main(int argc, char *argv[])
 	g_commandList.append("status");
 	g_commandList.append("unlock");
 	g_commandList.append("lock");
-
+	g_commandList.append("backup");
 	if (argc < 2) {
 		noCommandSpecified();
 		return -1;
@@ -120,6 +121,9 @@ int main(int argc, char *argv[])
 	}
 	if (!command.compare("lock")) {
 		task = new lockTask();
+	}
+	if (!command.compare("backup")) {
+		task = new backupTask(argc, argv);
 	}
 
 	//TODO:
