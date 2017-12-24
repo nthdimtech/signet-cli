@@ -21,8 +21,9 @@ extern "C" {
 #include "wipetask.h"
 #include "statustask.h"
 #include "unlocktask.h"
+#include "locktask.h"
 
-#define VERSION_STRING "0.0.2"
+#define VERSION_STRING "0.0.3"
 #define APPLICATION_STRING "signet-cli"
 
 QStringList g_commandList;
@@ -80,6 +81,7 @@ int main(int argc, char *argv[])
 	g_commandList.append("initialize");
 	g_commandList.append("status");
 	g_commandList.append("unlock");
+	g_commandList.append("lock");
 
 	if (argc < 2) {
 		noCommandSpecified();
@@ -116,9 +118,11 @@ int main(int argc, char *argv[])
 	if (!command.compare("unlock")) {
 		task = new unlockTask();
 	}
+	if (!command.compare("lock")) {
+		task = new lockTask();
+	}
 
 	//TODO:
-	// lock
 	// backup device
 	// restore device
 	// interactive mode

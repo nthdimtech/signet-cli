@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     scrypt/warnp.c \
     initializetask.cpp \
     statustask.cpp \
-    unlocktask.cpp
+    unlocktask.cpp \
+    locktask.cpp
 
 win32 {
 SOURCES += qtsingleapplication/src/qtlockedfile_win.cpp
@@ -54,5 +55,6 @@ HEADERS += \
     signetcliapplication.h \
     initializetask.h \
     statustask.h \
-    unlocktask.h
+    unlocktask.h \
+    locktask.h
 

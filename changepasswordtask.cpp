@@ -1,5 +1,4 @@
 #include "changepasswordtask.h"
-#include "wipetask.h"
 
 #include "signetcliapplication.h"
 
