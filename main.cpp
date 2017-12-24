@@ -20,6 +20,7 @@ extern "C" {
 #include "initializetask.h"
 #include "wipetask.h"
 #include "statustask.h"
+#include "unlocktask.h"
 
 #define VERSION_STRING "0.0.2"
 #define APPLICATION_STRING "signet-cli"
@@ -78,6 +79,7 @@ int main(int argc, char *argv[])
 	g_commandList.append("change-password");
 	g_commandList.append("initialize");
 	g_commandList.append("status");
+	g_commandList.append("unlock");
 
 	if (argc < 2) {
 		noCommandSpecified();
@@ -111,12 +113,15 @@ int main(int argc, char *argv[])
 	if (!command.compare("status")) {
 		task = new statusTask();
 	}
+	if (!command.compare("unlock")) {
+		task = new unlockTask();
+	}
+
 	//TODO:
+	// lock
 	// backup device
 	// restore device
 	// interactive mode
-	// login
-	// logout
 	// list accounts
 	// view account
 	// set account
