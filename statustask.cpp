@@ -40,9 +40,19 @@ void statusTask::cmdResponse(void *cb_user_param, int cmd_token, int cmd, int en
 	int token;
 	switch(cmd) {
 	case SIGNETDEV_CMD_GET_DEVICE_STATE: {
+		if (end_device_state == DISCONNECTED) {
+			::signetdev_startup(NULL, &token);
+		} else {
+			std::string str;
+			SignetCLIApplication::get()->deviceStateToString(end_device_state, str);
+			std::cout << "Device status: " << str << std::endl << std::endl;
+			QCoreApplication::quit();
+		}
+		} break;
+	case SIGNETDEV_CMD_STARTUP: {
 		std::string str;
 		SignetCLIApplication::get()->deviceStateToString(end_device_state, str);
-		std::cout << "Device status: " << str << std::endl;
+		std::cout << "Device status: " << str << std::endl << std::endl;
 		QCoreApplication::quit();
 		} break;
 	}
