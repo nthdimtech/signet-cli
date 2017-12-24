@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     scrypt/crypto_scrypt.c \
     scrypt/insecure_memzero.c \
     scrypt/sha256.c \
-    scrypt/warnp.c
+    scrypt/warnp.c \
+    initializetask.cpp
 
 win32 {
 SOURCES += qtsingleapplication/src/qtlockedfile_win.cpp
@@ -48,5 +49,6 @@ HEADERS += \
     qtsingleapplication/src/qtlocalpeer.h \
     wipetask.h \
     changepasswordtask.h \
-    signetcliapplication.h
+    signetcliapplication.h \
+    initializetask.h
 

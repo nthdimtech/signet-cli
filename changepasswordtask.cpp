@@ -58,18 +58,20 @@ void changePasswordTask::cmdResponse(void *cb_user_param, int cmd_token, int cmd
 		}
 
 		SignetCLIApplication *app = SignetCLIApplication::get();
-		QByteArray oldKey;
-		QByteArray newKey;
-		QByteArray salt((const char *)resp->salt, SALT_SZ_V2);
-		QByteArray hashfn((const char *)resp->hashfn, HASH_FN_SZ);
+		u8 oldKey[LOGIN_KEY_SZ];
+		u8 newKey[LOGIN_KEY_SZ];
+		u8 salt[SALT_SZ_V2];
+		u8 hashfn[HASH_FN_SZ];
+		memcpy(hashfn, resp->hashfn, HASH_FN_SZ);
+		memcpy(salt, resp->salt, SALT_SZ_V2);
 		std::cout << "Please wait while authentication keys are being generated..." << std::endl;
-		app->generateKey(oldPassword, oldKey, hashfn, salt, LOGIN_KEY_SZ);
-		app->generateKey(newPassword, newKey, hashfn, salt, LOGIN_KEY_SZ);
+		app->generateKey(oldPassword, oldKey, hashfn, salt);
+		app->generateKey(newPassword, newKey, hashfn, salt);
 		::signetdev_change_master_password(NULL, &token,
-						   (u8 *)oldKey.data(), LOGIN_KEY_SZ,
-						   (u8 *)newKey.data(), LOGIN_KEY_SZ,
-						   (u8 *)hashfn.data(), HASH_FN_SZ,
-						   (u8 *)salt.data(), SALT_SZ_V2);
+						   oldKey, LOGIN_KEY_SZ,
+						   newKey, LOGIN_KEY_SZ,
+						   hashfn, HASH_FN_SZ,
+						   salt, SALT_SZ_V2);
 		std::cout << "Press and hold the device button to change your master password..." << std::endl;
 	} break;
 	case SIGNETDEV_CMD_CHANGE_MASTER_PASSWORD: {

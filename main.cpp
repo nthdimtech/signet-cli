@@ -16,6 +16,7 @@ extern "C" {
 #include "signettask.h"
 #include "firmwareupdatetask.h"
 #include "changepasswordtask.h"
+#include "initializetask.h"
 #include "wipetask.h"
 
 #define VERSION_STRING "0.0.1"
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
 	g_commandList.append("update-firmware");
 	g_commandList.append("wipe");
 	g_commandList.append("change-password");
+	g_commandList.append("initialize");
 
 	if (argc < 2) {
 		noCommandSpecified();
@@ -100,6 +102,9 @@ int main(int argc, char *argv[])
 	}
 	if (!command.compare("change-password")) {
 		task = new changePasswordTask();
+	}
+	if (!command.compare("initialize")) {
+		task = new initializeTask();
 	}
 	//TODO:
 	// initialize

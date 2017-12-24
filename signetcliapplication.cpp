@@ -15,32 +15,29 @@ SignetCLIApplication::SignetCLIApplication(int &argc, char **argv) :
 	g_singleton = this;
 }
 
-void SignetCLIApplication::generateScryptKey(const QString &password, QByteArray &key, const QByteArray &salt, unsigned int N, unsigned int r, unsigned int s)
+void SignetCLIApplication::generateScryptKey(const QString &password, u8 *key, const u8 *salt, unsigned int N, unsigned int r, unsigned int s)
 {
 	QByteArray password_utf8 = password.toUtf8();
 	crypto_scrypt((u8 *)password_utf8.data(), password_utf8.size(),
-		      (u8 *)salt.data(), salt.size(),
+		      salt, SALT_SZ_V2,
 		      N, r, s,
-		      (u8 *)key.data(), key.size());
+		      key, LOGIN_KEY_SZ);
 
 }
 
-void SignetCLIApplication::generateKey(const QString &password, QByteArray &key, const QByteArray &hashfn, const QByteArray &salt, int keyLength)
+void SignetCLIApplication::generateKey(const QString &password, u8 *key, const u8 *hashfn, const u8 *salt)
 {
 	QByteArray s = password.toUtf8();
-	key.resize(keyLength);
-	memset(key.data(), 0, key.length());
+	memset(key, 0, LOGIN_KEY_SZ);
 
-	int fn = hashfn.at(0);
+	int fn = hashfn[0];
 
 	switch(fn) {
 	case 1: {
-		if (hashfn.size() >= 5) {
-			unsigned int N = ((unsigned int )1) << hashfn.at(1);
-			unsigned int r = ((unsigned int)hashfn.at(2)) + (((unsigned int)hashfn.at(3))<<8);
-			unsigned int p = (unsigned int)hashfn.at(4);
-			generateScryptKey(password, key, salt, N, r, p);
-		}
+		unsigned int N = ((unsigned int )1) << hashfn[1];
+		unsigned int r = ((unsigned int)hashfn[2]) + (((unsigned int)hashfn[3])<<8);
+		unsigned int p = (unsigned int)hashfn[4];
+		generateScryptKey(password, key, salt, N, r, p);
 	}
 	break;
 	default:
