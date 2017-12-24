@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     statustask.cpp \
     unlocktask.cpp \
     locktask.cpp \
-    backuptask.cpp
+    backuptask.cpp \
+    restoretask.cpp
 
 win32 {
 SOURCES += qtsingleapplication/src/qtlockedfile_win.cpp
@@ -58,5 +59,6 @@ HEADERS += \
     statustask.h \
     unlocktask.h \
     locktask.h \
-    backuptask.h
+    backuptask.h \
+    restoretask.h
 

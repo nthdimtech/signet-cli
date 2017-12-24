@@ -23,8 +23,9 @@ extern "C" {
 #include "unlocktask.h"
 #include "locktask.h"
 #include "backuptask.h"
+#include "restoretask.h"
 
-#define VERSION_STRING "0.0.3"
+#define VERSION_STRING "0.0.4"
 #define APPLICATION_STRING "signet-cli"
 
 QStringList g_commandList;
@@ -84,6 +85,7 @@ int main(int argc, char *argv[])
 	g_commandList.append("unlock");
 	g_commandList.append("lock");
 	g_commandList.append("backup");
+	g_commandList.append("restore");
 	if (argc < 2) {
 		noCommandSpecified();
 		return -1;
@@ -125,6 +127,9 @@ int main(int argc, char *argv[])
 	if (!command.compare("backup")) {
 		task = new backupTask(argc, argv);
 	}
+	if (!command.compare("restore")) {
+		task = new restoreTask(argc, argv);
+	}
 
 	//TODO:
 	// backup device
@@ -159,5 +164,8 @@ int main(int argc, char *argv[])
 
 	task->start();
 
-	return app.exec();
+	rc = app.exec();
+	delete task;
+	::signetdev_deinitialize_api();
+	return rc;
 }
