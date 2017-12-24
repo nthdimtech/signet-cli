@@ -5,6 +5,8 @@
 #include <QList>
 #include <QStringList>
 
+#include "qtsinglecoreapplication.h"
+
 #include <stdio.h>
 
 extern "C" {
@@ -63,7 +65,16 @@ void noCommandSpecified()
 
 int main(int argc, char *argv[])
 {
-	QCoreApplication a(argc, argv);
+	QtSingleCoreApplication *app = new QtSingleCoreApplication(
+				"qtsingle-app-signetdev-" + QString(USB_VENDOR_ID) + "-" + QString(USB_SIGNET_DESKTOP_PRODUCT_ID),
+				argc, argv);
+	if (app->isRunning()) {
+		fprintf(stderr,
+			"\n" APPLICATION_STRING " version " VERSION_STRING "\n"
+			"\n"
+			"A Signet client instance is already running. Close it and try again\n");
+		return -1;
+	}
 
 	g_commandList.append("update-firmware");
 
@@ -126,5 +137,5 @@ int main(int argc, char *argv[])
 
 	task->start();
 
-	return a.exec();
+	return app->exec();
 }
