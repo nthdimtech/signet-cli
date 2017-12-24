@@ -10,6 +10,13 @@ extern "C" {
 #include <iostream>
 #include <string>
 
+void restoreTask::help()
+{
+	std::cout << "Restores a backup file onto the device" << std::endl
+		  << std::endl
+		  << "Usage: signet-cli restore <backup file name>" << std::endl << std::endl;
+}
+
 restoreTask::restoreTask(int argc, char *argv[])
 {
 	if (argc > 0) {

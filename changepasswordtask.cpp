@@ -10,6 +10,13 @@ extern "C" {
 #include <string>
 #include <iostream>
 
+void changePasswordTask::help()
+{
+	std::cout << "Change the device's master password" << std::endl
+		  << std::endl
+		  << "Usage: signet-cli change-password"<< std::endl << std::endl;
+}
+
 changePasswordTask::changePasswordTask()
 {
 }

@@ -9,6 +9,13 @@ extern "C" {
 
 #include <iostream>
 
+void statusTask::help()
+{
+	std::cout << "Output's the device's current status" << std::endl
+		  << std::endl
+		  << "Usage: signet-cli status" << std::endl << std::endl;
+}
+
 statusTask::statusTask()
 {
 }

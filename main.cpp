@@ -64,7 +64,54 @@ void noCommandSpecified()
 	}
 	std::cout << std::endl
 		  << "For help regarding a specific command run:" << std::endl
-		  << "\t" APPLICATION_STRING " help <command>" << std::endl;
+		  << "\t" APPLICATION_STRING " help <command>" << std::endl << std::endl;
+}
+
+void help(int argc, char *argv[])
+{
+	if (argc <= 0) {
+		std::cout << "Possible commands are: " << std::endl;
+		QList<QString>::iterator iter;
+		for (iter = g_commandList.begin(); iter != g_commandList.end(); iter++) {
+			std::cout << "\t" << (*iter).toLatin1().data() << std::endl;
+		}
+		std::cout << std::endl
+			  << "For help regarding a specific command run:" << std::endl
+			  << "\t" APPLICATION_STRING " help <command>" << std::endl << std::endl;
+	} else {
+		QString command(argv[0]);
+		if (!command.compare("update-firmware")) {
+			firmwareUpdateTask::help();
+		}
+		if (!command.compare("wipe")) {
+			wipeTask::help();
+		}
+		if (!command.compare("change-password")) {
+			changePasswordTask::help();
+		}
+		if (!command.compare("initialize")) {
+			initializeTask::help();
+		}
+		if (!command.compare("status")) {
+			statusTask::help();
+		}
+		if (!command.compare("unlock")) {
+			unlockTask::help();
+		}
+		if (!command.compare("lock")) {
+			lockTask::help();
+		}
+		if (!command.compare("backup")) {
+			backupTask::help();
+		}
+		if (!command.compare("restore")) {
+			restoreTask::help();
+		}
+
+		if (!g_commandList.contains(command)) {
+			std::cout << "Unknown command: " << argv[0] << std::endl << std::endl;
+		}
+	}
 }
 
 int main(int argc, char *argv[])
@@ -92,6 +139,13 @@ int main(int argc, char *argv[])
 	}
 
 	QString command = QString(argv[1]);
+	argc -= 2;
+	argv += 2;
+
+	if (!command.compare("help")) {
+		help(argc, argv);
+		return 0;
+	}
 
 	if (!g_commandList.contains(command)) {
 		unknownCommand(command);
@@ -99,9 +153,6 @@ int main(int argc, char *argv[])
 	}
 
 	signetTask *task = NULL;
-
-	argc -= 2;
-	argv += 2;
 
 	if (!command.compare("update-firmware")) {
 		task = new firmwareUpdateTask(argc, argv);

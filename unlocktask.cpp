@@ -8,6 +8,13 @@ extern "C" {
 
 #include <iostream>
 
+void unlockTask::help()
+{
+	std::cout << "Unlock the device by entering your master password." << std::endl
+		  << std::endl
+		  << "Usage: signet-cli unlock" << std::endl << std::endl;
+}
+
 unlockTask::unlockTask()
 {
 }

@@ -10,6 +10,12 @@ extern "C" {
 #include <string>
 #include <iostream>
 
+void lockTask::help()
+{
+	std::cout << "Lock the device. Prevents further data accesses until password is entered again" << std::endl
+		  << std::endl
+		  << "Usage: signet-cli lock" << std::endl << std::endl;
+}
 
 lockTask::lockTask()
 {

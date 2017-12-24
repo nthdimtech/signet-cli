@@ -7,6 +7,15 @@ extern "C" {
 #include "signetdev/host/signetdev.h"
 }
 
+#include <iostream>
+
+void wipeTask::help()
+{
+	std::cout << "Wipe the device. Permanently erases all data." << std::endl
+		  << std::endl
+		  << "Usage: signet-cli wipe" << std::endl << std::endl;
+}
+
 wipeTask::wipeTask()
 {
 }

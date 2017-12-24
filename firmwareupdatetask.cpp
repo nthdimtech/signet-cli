@@ -9,6 +9,15 @@ extern "C" {
 #include "signetdev/host/signetdev.h"
 }
 
+#include <iostream>
+
+void firmwareUpdateTask::help()
+{
+	std::cout << "Update the device's firmware" << std::endl
+		  << std::endl
+		  << "Usage: signet-cli update-firmware <firmare file>" << std::endl << std::endl;
+}
+
 firmwareUpdateTask::firmwareUpdateTask(int argc, char *argv[])  : m_writePhase(false)
 {
 	if (argc <= 0) {

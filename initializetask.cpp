@@ -10,6 +10,13 @@ extern "C" {
 #include <string>
 #include <iostream>
 
+void initializeTask::help()
+{
+	std::cout << "Initialize the device. Erases any existing contents."<< std::endl
+		  << std::endl
+		  << "Usage: signet-cli initialize" << std::endl  << std::endl;
+}
+
 initializeTask::initializeTask()
 {
 

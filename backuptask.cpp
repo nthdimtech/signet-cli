@@ -10,6 +10,13 @@ extern "C" {
 #include <iostream>
 #include <string>
 
+void backupTask::help()
+{
+	std::cout << "Create a backup of the device's database" << std::endl
+		  << std::endl
+		  << "Usage: signet-cli backup <filename>" << std::endl << std::endl;
+}
+
 backupTask::backupTask(int argc, char *argv[])
 {
 	if (argc > 0) {
