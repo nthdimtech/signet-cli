@@ -155,6 +155,10 @@ int main(int argc, char *argv[])
 	signetTask *task = NULL;
 
 	if (!command.compare("update-firmware")) {
+		//TODO: we need the firmware update task to handle device
+		//connect and disconnect messages so it doesn't look like
+		//an error when the device auto-resets after the firmware
+		//upgrade
 		task = new firmwareUpdateTask(argc, argv);
 	}
 	if (!command.compare("wipe")) {

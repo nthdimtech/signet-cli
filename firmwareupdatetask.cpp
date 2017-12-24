@@ -46,7 +46,7 @@ bool firmwareUpdateTask::start()
 	int token;
 	if (!m_canStart)
 		return false;
-	::signetdev_startup(NULL, &token);
+	::signetdev_get_device_state(NULL, &token);
 	return true;
 }
 
@@ -83,10 +83,47 @@ void firmwareUpdateTask::cmdResponse(void *cb_user_param, int cmd_token, int cmd
 	Q_UNUSED(messages_remaining);
 	int token;
 	switch(cmd) {
+	case SIGNETDEV_CMD_GET_DEVICE_STATE: {
+		switch (end_device_state) {
+		case DISCONNECTED:
+			::signetdev_startup(NULL, &token);
+			break;
+		case UNINITIALIZED:
+		case LOGGED_IN:
+			::signetdev_begin_update_firmware(NULL, &token);
+			break;
+		case LOGGED_OUT:
+			std::cout << "You must unlock the device before updating firmware" << std::endl;
+			QCoreApplication::quit();
+			break;
+		default:
+			std::cout << "Device not in valid state for updating firmware" << std::endl;
+			QCoreApplication::quit();
+			break;
+		}
+	} break;
 	case SIGNETDEV_CMD_STARTUP: {
+		std::cout << "Press and HOLD device button to begin updating firmware" << std::endl;
 		::signetdev_begin_update_firmware(NULL, &token);
+		switch (end_device_state) {
+		case LOGGED_OUT:
+			std::cout << "You must unlock the device before updating firmware" << std::endl;
+			QCoreApplication::quit();
+			break;
+		case UNINITIALIZED:
+			::signetdev_begin_update_firmware(NULL, &token);
+			break;
+		default:
+			std::cout << "Device not in valid state for updating firmware" << std::endl;
+			QCoreApplication::quit();
+			break;
+		}
+
 	} break;
 	case SIGNETDEV_CMD_BEGIN_UPDATE_FIRMWARE: {
+		std::cout << "Firmware update started, this make take awhile. "
+			  << "Disconnecting your device before the update finishes will lead to device malfunction" << std::endl;
+
 		QByteArray erase_pages_;
 		QByteArray page_mask(512, 0);
 
