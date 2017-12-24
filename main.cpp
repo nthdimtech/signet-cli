@@ -5,7 +5,7 @@
 #include <QList>
 #include <QStringList>
 
-#include "qtsinglecoreapplication.h"
+#include "signetcliapplication.h"
 
 #include <stdio.h>
 
@@ -15,9 +15,10 @@ extern "C" {
 
 #include "signettask.h"
 #include "firmwareupdatetask.h"
+#include "changepasswordtask.h"
 #include "wipetask.h"
 
-#define VERSION_STRING "1.0.0"
+#define VERSION_STRING "0.0.1"
 #define APPLICATION_STRING "signet-cli"
 
 QStringList g_commandList;
@@ -61,12 +62,10 @@ void noCommandSpecified()
 
 int main(int argc, char *argv[])
 {
-	QtSingleCoreApplication *app = new QtSingleCoreApplication(
-				"qtsingle-app-signetdev-" + QString(USB_VENDOR_ID) + "-" + QString(USB_SIGNET_DESKTOP_PRODUCT_ID),
-				argc, argv);
+	SignetCLIApplication app(argc, argv);
 	fprintf(stdout, "\n" APPLICATION_STRING " version " VERSION_STRING "\n\n");
 
-	if (app->isRunning()) {
+	if (app.isRunning()) {
 		fprintf(stderr,
 			"A Signet client instance is already running. Close it and try again\n");
 		return -1;
@@ -74,6 +73,7 @@ int main(int argc, char *argv[])
 
 	g_commandList.append("update-firmware");
 	g_commandList.append("wipe");
+	g_commandList.append("change-password");
 
 	if (argc < 2) {
 		noCommandSpecified();
@@ -98,10 +98,11 @@ int main(int argc, char *argv[])
 	if (!command.compare("wipe")) {
 		task = new wipeTask();
 	}
+	if (!command.compare("change-password")) {
+		task = new changePasswordTask();
+	}
 	//TODO:
-	// wipe
 	// initialize
-	// change password
 	// backup device
 	// get device status
 	// restore device
@@ -137,5 +138,5 @@ int main(int argc, char *argv[])
 
 	task->start();
 
-	return app->exec();
+	return app.exec();
 }
