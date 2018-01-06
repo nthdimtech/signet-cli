@@ -1,3 +1,3 @@
 [submodule "signet-firmware"]
 	path = signet-firmware
-	url = git@github.com:nthdimtech/signet-firmware.git
+	url = ../signet-firmware.git
