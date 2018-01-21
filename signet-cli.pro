@@ -8,15 +8,34 @@ CONFIG += console
 CONFIG -= app_bundle
 
 QMAKE_CXXFLAGS += -std=c++11 -msse4.1
+QMAKE_CFLAGS += -std=c99 -msse4.1
 
 TEMPLATE = app
 
-CONFIG(release, debug|release):LIBS += -L$$PWD/signet-firmware/build-signetdev-$$QT_ARCH-release
-CONFIG(debug, debug|release):LIBS += -L$$PWD/signet-firmware/build-signetdev-$$QT_ARCH-debug
-LIBS += -lsignetdev
-INCLUDEPATH += $$PWD/signet-firmware
+INCLUDEPATH += $$PWD/signet-base
 INCLUDEPATH += $$PWD/qtsingleapplication/src
 INCLUDEPATH += $$PWD/scrypt
+
+SOURCES += signet-base/signetdev/host/signetdev.c
+
+unix {
+HEADERS += signet-base/signetdev/host/signetdev_unix.h
+SOURCES += signet-base/signetdev/host/signetdev_unix.c
+}
+
+win32 {
+SOURCES += signet-base/signetdev/host/rawhid/hid_WINDOWS.c \
+        signet-base/signetdev/host/signetdev_win32.c
+}
+
+macx {
+SOURCES += signet-base/signetdev/host/signetdev_osx.c
+HEADERS += signet-base/signetdev/host/signetdev_osx.h
+}
+
+unix:!macx {
+SOURCES += signet-base/signetdev/host/signetdev_linux.c
+}
 
 SOURCES += main.cpp \
     firmwareupdatetask.cpp \

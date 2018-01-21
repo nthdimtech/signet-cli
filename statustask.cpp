@@ -34,6 +34,8 @@ bool statusTask::start()
 
 void statusTask::cmdResponse(void *cb_user_param, int cmd_token, int cmd, int end_device_state, int messages_remaining, int resp_code, void *resp_data)
 {
+	Q_UNUSED(resp_code);
+	Q_UNUSED(resp_data);
 	Q_UNUSED(cb_user_param);
 	Q_UNUSED(cmd_token);
 	Q_UNUSED(messages_remaining);
