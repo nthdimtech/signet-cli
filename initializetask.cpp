@@ -9,6 +9,7 @@ extern "C" {
 
 #include <string>
 #include <iostream>
+#include <random>
 
 void initializeTask::help()
 {
